@@ -32,6 +32,7 @@ public class PickupAnimator : MonoBehaviour
 		modelRenderer.enabled = false;
 		idleEffect.Stop();
 		collectEffect.Play();
+		gameObject.GetComponent<AudioSource>().enabled = false;
 	}
 
 	private void Update()

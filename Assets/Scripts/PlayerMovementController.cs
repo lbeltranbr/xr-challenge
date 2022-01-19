@@ -8,22 +8,30 @@ public class PlayerMovementController : MonoBehaviour
 
     private Animator animator;
     private Rigidbody rb;
+    private AudioSource walk;
     private bool isGrounded = true;
+    private bool playSound = false;
+    private bool isPlaying = false;
     // Start is called before the first frame update
     void Start()
     {
         animator = gameObject.GetComponent<Animator>();
         rb = gameObject.GetComponent<Rigidbody>();
+        walk = gameObject.GetComponent<AudioSource>();
 
         if (!animator)
             Debug.LogError("Animator not found");
         if (!rb)
             Debug.LogError("Rigidbody not found");
+        if (!walk)
+            Debug.LogError("Sound not found");
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -35,15 +43,29 @@ public class PlayerMovementController : MonoBehaviour
 
         if (direction.magnitude > 0.01)
         {
-            transform.Rotate(new Vector3(0, horizontal, 0) * r_speed * Time.deltaTime, Space.World);
+            playSound = true;
+            transform.Rotate(new Vector3(0f, horizontal, 0f) * r_speed * Time.deltaTime, Space.World);
             transform.position = transform.position + vertical * transform.forward * Time.deltaTime * m_speed;
+            if (playSound && !isPlaying)
+            {
+                walk.Play();
+                isPlaying = true;
+            }
         }
+        else
+        {
+            walk.Stop();
+            isPlaying = false;
+        }
+
 
         if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
             animator.SetBool("IsGrounded", isGrounded);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
+            walk.Stop();
+            isPlaying = false;
         }
 
         //Debug.Log(isGrounded);
