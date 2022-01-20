@@ -30,8 +30,6 @@ public class PlayerMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -41,12 +39,12 @@ public class PlayerMovementController : MonoBehaviour
         animator.SetFloat("Vertical", vertical);
         animator.SetBool("IsGrounded", isGrounded);
 
-        if (direction.magnitude > 0.01)
+        if (direction.magnitude > 0.01) //move
         {
             playSound = true;
             transform.Rotate(new Vector3(0f, horizontal, 0f) * r_speed * Time.deltaTime, Space.World);
             transform.position = transform.position + vertical * transform.forward * Time.deltaTime * m_speed;
-            if (playSound && !isPlaying)
+            if (playSound && !isPlaying && isGrounded)
             {
                 walk.Play();
                 isPlaying = true;
@@ -58,8 +56,7 @@ public class PlayerMovementController : MonoBehaviour
             isPlaying = false;
         }
 
-
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded) //Jump
         {
             animator.SetBool("IsGrounded", isGrounded);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -67,12 +64,12 @@ public class PlayerMovementController : MonoBehaviour
             walk.Stop();
             isPlaying = false;
         }
+        if (transform.position.y < -1) //in case the player falls
+            transform.position = new Vector3(transform.position.x, 2, transform.position.z);
 
-        //Debug.Log(isGrounded);
     }
     private void OnCollisionStay(Collision collision)
     {
         isGrounded = true;
-
     }
 }
