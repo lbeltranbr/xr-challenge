@@ -19,5 +19,9 @@ Proposed improvements
 * Add life state and items to the character
 * Add controller support and use vibration to add more feedback to the player
 * Add post-processing to the scenes
+
+Commits
+
+https://github.com/lbeltranbr/xr-challenge/commits/master
  
 
